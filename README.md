@@ -2,7 +2,7 @@
 
 Practical, open-source templates to help engineering and compliance teams start their EU AI Act compliance journey. These templates are designed to be used with the step-by-step guide available on BinaryVerseAI.
 
-**Read the full guide here: [The Definitive 2025 EU AI Act Compliance Checklist](https://yourwebsite.com/your-article-url)**
+**Read the full guide here: [The Definitive 2025 EU AI Act Compliance Checklist](https://binaryverseai.com/eu-ai-act-compliance-checklist)**
 
 ---
 
