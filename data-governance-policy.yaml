@@ -1,0 +1,42 @@
+# data_governance_policy.yaml
+version: 1.0
+owner: ai-governance@company.com
+scope:
+  ai_system: "credit-scoring-hris-v2"
+  datasets:
+    - name: training_main
+      purpose: "Model training"
+      pii: true
+      lawful_basis: "Contract + legitimate interests"
+      provenance: ["internal_core_db", "bureau_scores_v2024_12"]
+      representativeness_check:
+        method: "KS-test + demog parity"
+        schedule: "quarterly"
+      quality_controls:
+        - "null/dup/outlier rules"
+        - "bias screen across protected attributes"
+      retention:
+        policy: "5y or shorter if purpose achieved"
+        deletion_procedure: "data-lifecycle-runbook#L42"
+    - name: validation_holdout
+      purpose: "Model validation"
+      pii: true
+      stratified_sampling: true
+governance:
+  roles:
+    dpo: "dpo@company.com"
+    data_steward: "ml-data@company.com"
+    model_owner: "risk-ml@company.com"
+  approvals_required:
+    - "DPIA/FRIA sign-off (if applicable)"
+    - "Security review"
+documentation:
+  model_card: "s3://ai-docs/model-cards/credit-scoring-hris-v2/README.md"
+  datasheets: "s3://ai-docs/datasheets/*"
+monitoring:
+  bias:
+    metrics: ["SPD","EOD","AUC by group"]
+    alerting: "pagerduty:ai-risk"
+  drift:
+    metrics: ["PSI","KL"]
+    threshold_policy: "risk-policies/drift-thresholds.md"
