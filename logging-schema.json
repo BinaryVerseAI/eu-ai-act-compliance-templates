@@ -2,7 +2,10 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "ai_decision_event",
   "type": "object",
-  "required": ["event_id","timestamp","ai_system","model_version","input_fingerprint","output_id","decision","confidence"],
+  "required": [
+    "event_id", "timestamp", "ai_system", "model_version",
+    "input_fingerprint", "decision", "confidence"
+  ],
   "properties": {
     "event_id": {"type":"string","description":"UUIDv4"},
     "timestamp": {"type":"string","format":"date-time"},
@@ -17,7 +20,7 @@
     "overrides": {"type":"object","description":"human oversight adjustments"},
     "latency_ms": {"type":"integer"},
     "errors": {"type":"array","items":{"type":"string"}},
-    "appeal_id": {"type":"string","description":"link to user appeal"},
+    "appeal_id": {"type":"string","description":"link to user appeal/workflow"},
     "notes": {"type":"string","maxLength":2000},
     "pseudonymous_user_id": {"type":"string"}
   }
