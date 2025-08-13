@@ -1,19 +1,23 @@
 # data_governance_policy.yaml
-version: 1.0
+version: 1.1
 owner: ai-governance@company.com
 scope:
   ai_system: "credit-scoring-hris-v2"
+  intended_purpose: "Assess creditworthiness for consumer loans in the EU"
   datasets:
     - name: training_main
       purpose: "Model training"
       pii: true
       lawful_basis: "Contract + legitimate interests"
-      provenance: ["internal_core_db", "bureau_scores_v2024_12"]
+      provenance:
+        - "internal_core_db"
+        - "bureau_scores_v2024_12"
       representativeness_check:
-        method: "KS-test + demog parity"
+        methods: ["KS-test", "demographic parity by protected groups"]
         schedule: "quarterly"
       quality_controls:
-        - "null/dup/outlier rules"
+        - "null/duplicate/outlier rules"
+        - "label leakage scan"
         - "bias screen across protected attributes"
       retention:
         policy: "5y or shorter if purpose achieved"
@@ -22,21 +26,33 @@ scope:
       purpose: "Model validation"
       pii: true
       stratified_sampling: true
+    - name: test_online
+      purpose: "Post-market performance verification"
+      pii: pseudonymised
 governance:
   roles:
     dpo: "dpo@company.com"
     data_steward: "ml-data@company.com"
     model_owner: "risk-ml@company.com"
   approvals_required:
-    - "DPIA/FRIA sign-off (if applicable)"
+    - "GDPR DPIA link (if applicable)"
+    - "FRIA sign-off (if applicable)"
     - "Security review"
 documentation:
-  model_card: "s3://ai-docs/model-cards/credit-scoring-hris-v2/README.md"
+  model_card: "s3://ai-docs/model-cards/credit-scoring-hris-v2/1.3/README.md"
   datasheets: "s3://ai-docs/datasheets/*"
+logging_traceability:
+  enabled: true
+  schema_ref: "schemas/ai_decision_event.schema.json"
 monitoring:
   bias:
-    metrics: ["SPD","EOD","AUC by group"]
+    metrics: ["SPD","EOD","AUC_by_group"]
     alerting: "pagerduty:ai-risk"
   drift:
     metrics: ["PSI","KL"]
     threshold_policy: "risk-policies/drift-thresholds.md"
+  robustness:
+    tests: ["adversarial/perturbation suite"]
+security:
+  supply_chain: ["SBOM required", "sign artifacts", "reproducible builds"]
+  access_controls: ["least-privilege", "break-glass procedure"]
